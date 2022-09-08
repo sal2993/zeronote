@@ -99,7 +99,7 @@ const Home: NextPage = () => {
           ) 
             : (
             <>
-              <h5>A no frills notes, journal app</h5>
+              <h5>A no frills notes, journal app.</h5>
               <Link href="/api/auth/login">Login</Link>
             </>
           )
