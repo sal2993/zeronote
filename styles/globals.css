@@ -4,13 +4,28 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #212121;
+}
+
+h2, h3, h5, p {
+  color: whitesmoke
+}
+
+h1 {
+  color: lightslategray
 }
 
 a {
-  color: inherit;
+  color: wheat;
   text-decoration: none;
 }
 
 * {
   box-sizing: border-box;
+}
+
+textarea {
+  background-color: dimgray;
+  color: lightslategray;
+  width: 100%
 }
