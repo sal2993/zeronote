@@ -3,6 +3,7 @@ import Head from 'next/head'
 import React, { KeyboardEventHandler } from 'react'
 import styles from '../styles/Home.module.css'
 import { useUser } from '@auth0/nextjs-auth0';
+import Link from 'next/link';
 
 let userPostDraft = ''
 
@@ -92,14 +93,14 @@ const Home: NextPage = () => {
             <div className={styles.profile_options}>
               <h2>{user.name}</h2>
               <p>{user.email}</p>
-              <a href="/api/auth/logout">Logout</a>
+              <Link href="/api/auth/logout">Logout</Link>
             </div>
           </>
           ) 
             : (
             <>
               <h5>A no frills notes, journal app</h5>
-              <a href="/api/auth/login">Login</a>
+              <Link href="/api/auth/login">Login</Link>
             </>
           )
         }
