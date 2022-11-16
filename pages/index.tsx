@@ -9,7 +9,7 @@ let userPostDraft = ''
 
 const zero_note_api_url = process.env.NEXT_PUBLIC_ZERO_NOTE_API_URL
 
-console.log("zero_note_api_url: ", zero_note_api_url)
+
 
 
 const Home: NextPage = () => {
