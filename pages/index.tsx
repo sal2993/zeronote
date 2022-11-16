@@ -1,99 +1,123 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import React, { KeyboardEventHandler } from 'react'
+import React, { KeyboardEventHandler, LegacyRef, useRef, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { useUser } from '@auth0/nextjs-auth0';
 import Link from 'next/link';
 
 let userPostDraft = ''
 
-const userPostDraftHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-  if (e != null) {
-    console.log("result: :", (e.target as HTMLTextAreaElement).value)
-    userPostDraft = (e.target as HTMLTextAreaElement).value
-  }
-}
+const zero_note_api_url = process.env.NEXT_PUBLIC_ZERO_NOTE_API_URL
 
-let testLocked = () => {
-  console.log("testing locked & unlocked")
+console.log("zero_note_api_url: ", zero_note_api_url)
 
-  fetch('/api/hello', {
-      method: "GET"
-    }).then((response) => {console.log(response.json())})
-
-
-  fetch('/api/hello-locked', {
-    method: "GET"
-  }).then((response) => {console.log(response.json())})
-}
-
-const submitPostHandler = async () => {
-  console.log("submitting the post: ", userPostDraft)
-  const res = await fetch('api/save', {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      message: userPostDraft,
-      tags: "someday"
-    })
-  })
-}
-
-const JournalEntry = () => {
-  return (
-    <div>
-      <br />
-      <textarea name='message' id='textArea' rows={10} cols={100} onKeyUp={userPostDraftHandler}></textarea>
-
-      <div className={styles.grid3}>
-        <h3>Tags:</h3>
-        <input type='text' name="tags" placeholder='note-to-self;journal (delimeter is ";")' className={styles.entryInput}></input>
-        <div className={styles.card}>
-          <h2>Tags for this post</h2>
-
-        </div>
-
-        <div className={styles.card}>
-          <h2>Recent Tags</h2>  
-          <p>#Wonder; #HighestInTheRoom; #Chat</p>
-        </div>
-
-      </div>
-
-      <button onClick={submitPostHandler}>Submit</button>
-      <button onClick={testLocked}>test locked endpoint</button>
-    </div>
-    
-  )
-}
 
 const Home: NextPage = () => {
   const { user, error, isLoading } = useUser();
 
+  let tagDraft = ''
+  let postDraft = ''
+
+  const [tags, setTags] = useState([] as Array<string>);
+  const [tagStaging, setTagStaging] = useState([]);
+  const [postStaging, setPostStaging] = useState('');
+  const refTagInput = useRef("n")
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
+
+  const tagSubmitHandler = () => {
+    console.log("tagSubmitHandler")
+    setTags(tags => [...tags, tagDraft])
+    refTagInput.current.value = ""
+
+
+  }
+
+  const submitPostHandler = async () => {
+    console.log("submitting the post tags: ", tags)
+    console.log("submitting the post payload: ", postStaging)
+    console.log("submitting the user: ", user?.name)
+    const res = await fetch(zero_note_api_url + "/users")
+    console.log(res)
+    // , {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({
+    //     message: userPostDraft,
+    //     tags: "someday"
+    //   })
+    // })
+  }
+  
+
+  const noteOnChangeDraftHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e != null) {
+      console.log("result: :", (e.target as HTMLTextAreaElement).value)
+      postDraft = (e.target as HTMLTextAreaElement).value
+      setPostStaging((e.target as HTMLTextAreaElement).value)
+      // userPostDraft = (e.target as HTMLTextAreaElement).value
+    }
+  }
+
+  const tagStagingOnChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("tag handler triggered.")
+    tagDraft = (e.target as HTMLInputElement).value
+    console.log('tagdraft: ', tagDraft)
+
+  }
 
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>Zero Note</title>
-        <meta name="description" content="A no frills, journal app." />
+        <title id='title'>Zero Note</title>
+        <meta id="meta" name="description" content="A no frills, journal app." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main className={styles.main} id='main'>
         <h1>Zero Note</h1>
         {
           user ? (
           <> 
-            <JournalEntry />
+            <div>
+              <br />
+              <div className={styles.grid}>
+                <textarea name='message' value={postStaging} id='message' rows={10} cols={100} onChange={(e) => {setPostStaging(e.target.value)}}></textarea>
+
+              </div>
+              {
+                tags.map((tag) => {
+                  return (
+                    <button id={tag} key={tag}>{tag}</button>
+                  )
+                })
+              }
+              <hr />
+              <div className={styles.grid3}>
+                <div className={styles.card}>
+                  <h2>Tags</h2>
+                  <div className={styles.grid2}>
+                    <input type='text' name="tags" placeholder='' ref={refTagInput} className={styles.entryInput} onChange={tagStagingOnChangeHandler}></input>
+                    <button onClick={tagSubmitHandler}>+</button>
+                    <hr />
+                    <p>Recently used:</p>
+                  
+                  </div>
+                </div>
+                <button onClick={submitPostHandler}>Submit Post</button>
+              </div>
+            </div>
+
+
             <div className={styles.profile_options}>
-              <h2>{user.name}</h2>
-              <p>{user.email}</p>
-              <Link href="/api/auth/logout">Logout</Link>
+              <div className={styles.paddingAbove}>  
+                <h2 >{user.name}</h2>
+                <Link href="/api/auth/logout">Logout</Link>
+              </div>
             </div>
           </>
           ) 
@@ -105,12 +129,6 @@ const Home: NextPage = () => {
           )
         }
       </main>
-
-
-
-
-
-
       <footer className={styles.footer}>
         <h4>
           Zero Note
