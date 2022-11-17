@@ -21,7 +21,7 @@ const Home: NextPage = () => {
   const [tags, setTags] = useState([] as Array<string>);
   const [tagStaging, setTagStaging] = useState([]);
   const [postStaging, setPostStaging] = useState('');
-  const refTagInput = useRef("n")
+  const refTagInput = useRef<any>("n")
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
   const tagSubmitHandler = () => {
     console.log("tagSubmitHandler")
     setTags(tags => [...tags, tagDraft])
-    refTagInput.current.value = ""
+    refTagInput.current.value = "" // fixed..
 
 
   }
