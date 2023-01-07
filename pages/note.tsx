@@ -115,19 +115,16 @@ const Note: NextPage<any> = (props: any) => {
   return (
     <div className={styles.container}>
 
-
       <main className={styles.main}>
-
 
         <div className={styles.grid3}>
           {
             pastPosts.map((post) => {
               return (
 
-                <div className={styles.card}>
-                  
+                <div className={styles.card} key={post._id + "div"}>
                   <ReactMarkdown children={post.note} remarkPlugins={[remarkGfm]} key={post._id} />
-                  <span key={post.post_id}>{post.email} | {post.tags}</span>
+                  <span id={post._id + post.email} key={post._id + post.email}>{post.email} | {post.tags}</span>
                 </div>
 
               )
@@ -139,12 +136,11 @@ const Note: NextPage<any> = (props: any) => {
           <br />
           <div className={styles.grid}>
             <textarea name='message' value={postStaging} id='message' rows={10} cols={100} onChange={(e) => {setPostStaging(e.target.value)}}></textarea>
-
           </div>
           {
             tags.map((tag) => {
               return (
-                <button id={tag} key={tag}>{tag}</button>
+                <button id={tag} key={tag + (Math.random() + 1).toString(36).substring(7)}>{tag}</button>
               )
             })
           }
