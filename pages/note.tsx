@@ -12,9 +12,11 @@ const Note: NextPage<any> = (props: any) => {
   let postDraft: string;
 
   const [pastPosts, setPastPosts] = useState([] as Array<any>)
-  const [tags, setTags] = useState([] as Array<string>);
-  const [tagStaging, setTagStaging] = useState([]);
-  const [postStaging, setPostStaging] = useState('');
+  const [tags, setTags] = useState([] as Array<string>)
+  const [freezeSubmit, setFreezeSubmit] = useState(false)
+  const [loadingNotes, setLoadingNotes]= useState(false)
+  const [tagStaging, setTagStaging] = useState([])
+  const [postStaging, setPostStaging] = useState('')
   const refTagInput = useRef<any>("n")
 
 
@@ -74,28 +76,25 @@ const Note: NextPage<any> = (props: any) => {
 
   const submitNoteHandler = async () => {
 
-    console.log("submitting the post tags: ", tags)
-    console.log("submitting the post payload: ", postStaging)
-    console.log("submitting the user: ", props.name)
-
-    // makeRequest("/api/user-posts", "/hello-locked", "GET", "").then ((data) => {console.log("resultzzzzz ~ ", data)})
-
     const note_post = {
       note: postStaging,
       tags: tags,
       email: props.name // todo: change to props.name after this mf plane
     }
 
-    console.log("body of node: ", note_post)
-    console.log("serialize body: ", JSON.stringify(note_post))
-
+    // lock screen
+    setFreezeSubmit(true)
 
     makeRequest( "/api/user-posts", "", "POST", note_post).then((data) => {
+
+      // todo: error handling...
+
       console.log(data)
       // todo: add the data to the react state.
       setPostStaging('')
       setTagStaging([])
       setTags([])
+      setFreezeSubmit(false)
       setPastPosts((prevState) => {return [...prevState, data]})
       refTagInput.current.value = ""
 
@@ -119,16 +118,23 @@ const Note: NextPage<any> = (props: any) => {
 
         <div className={styles.grid3}>
           {
-            pastPosts.map((post) => {
-              return (
-
-                <div className={styles.card} key={post._id + "div"}>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]} key={post._id} >{post.note}</ReactMarkdown>
-                  <span id={post._id + post.email} key={post._id + post.email}>{post.email} | {post.tags}</span>
-                </div>
-
-              )
-            })
+            loadingNotes 
+            ? 
+              (<h1>Loading.....</h1>) 
+            : 
+              (<>{
+                  pastPosts.map((post) => {
+                    return (
+      
+                      <div className={styles.card} key={post._id + "div"}>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} key={post._id} >{post.note}</ReactMarkdown>
+                        <span id={post._id + post.email} key={post._id + post.email}>{post.email} | {post.tags}</span>
+                      </div>
+      
+                    )
+                  })
+                }</>)
+            
           }
         </div>
 
@@ -156,7 +162,7 @@ const Note: NextPage<any> = (props: any) => {
               
               </div>
             </div>
-            <button onClick={submitNoteHandler}>Submit Post</button>
+            <button onClick={submitNoteHandler} disabled={freezeSubmit}>Submit Post</button>
           </div>
         </div>
 
