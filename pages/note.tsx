@@ -64,8 +64,14 @@ const Note: NextPage<any> = (props: any) => {
       setPastPosts(data)
     })
 
+    scrollToBottom()
+
   }, [])
 
+
+  const scrollToBottom = () => {
+    refTagInput.current?.scrollIntoView({behavior: "smooth"})
+  }
 
   const tagSubmitHandler = () => {
     
@@ -133,7 +139,7 @@ const Note: NextPage<any> = (props: any) => {
       
                     )
                   })
-                }</>)
+              }</>)
             
           }
         </div>

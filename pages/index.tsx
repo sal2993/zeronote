@@ -27,7 +27,7 @@ const Home: NextPage = () => {
       {
         user ? (
           <> 
-            <Note name={ user.name }></Note>
+              <Note name={user.name}></Note>
           </>
         ) :
         (
