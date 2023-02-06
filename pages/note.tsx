@@ -4,6 +4,8 @@ import styles from '../styles/Home.module.css'
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { Button } from "@nextui-org/react";
+import { Textarea  } from '@nextui-org/react';
 
 
 const Note: NextPage<any> = (props: any) => {
@@ -59,7 +61,7 @@ const Note: NextPage<any> = (props: any) => {
 
   useEffect(() => {
 
-    makeRequest("/api/user-posts?", "", "GET", {"email": props.name}).then((data) => {
+    makeRequest("/api/user-posts?", "", "GET", {"email": props.name, "limited": true}).then((data) => {
       console.log(`data: ~${JSON.stringify(data)}`)
       setPastPosts(data)
       scrollToBottom()
@@ -108,6 +110,13 @@ const Note: NextPage<any> = (props: any) => {
 
   }
   
+  const getAllPosts = () => {
+    console.log("get all posts...")
+    makeRequest("/api/user-posts?", "", "GET", {"email": props.name}).then((data) => {
+      console.log(`data: ~${JSON.stringify(data)}`)
+      setPastPosts(data)
+    })
+  }
 
   const tagStagingOnChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("tag handler triggered.")
@@ -121,6 +130,10 @@ const Note: NextPage<any> = (props: any) => {
     <div className={styles.container}>
 
       <main className={styles.main}>
+
+        <Button onClick={getAllPosts} bordered color="secondary" auto>All Notes</Button>
+      
+        
 
         <div className={styles.grid3}>
           {
@@ -147,7 +160,16 @@ const Note: NextPage<any> = (props: any) => {
         <div>
           <br />
           <div className={styles.grid}>
-            <textarea name='message' value={postStaging} id='message' rows={10} cols={100} onChange={(e) => {setPostStaging(e.target.value)}}></textarea>
+            <Textarea
+              name='message' 
+              value={postStaging}
+              id='message' 
+              placeholder="Enter your amazing ideas."
+              cols={100}
+              minRows={10}
+              maxRows={14}
+              onChange={(e) => {setPostStaging(e.target.value)}}
+            />
           </div>
           {
             tags.map((tag) => {
@@ -174,9 +196,9 @@ const Note: NextPage<any> = (props: any) => {
 
         <div className={styles.profile_options}>
           <div className={styles.paddingAbove}>  
-          <p>
-            {props.name}
-          </p>
+            <p>
+              {props.name}
+            </p>
             <Link href="/api/auth/logout">Logout</Link>
           </div>
         </div>
