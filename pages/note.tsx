@@ -197,6 +197,7 @@ const Note: NextPage<any> = (props: any) => {
                 })
               }
               <hr />
+              <Button auto color="primary" size="sm" onClick={submitNoteHandler} disabled={freezeSubmit}>Submit</Button>
             </div>
 
             <div className={styles.profile_options}>
