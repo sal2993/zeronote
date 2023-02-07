@@ -4,8 +4,9 @@ import styles from '../styles/Home.module.css'
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Button } from "@nextui-org/react";
+import { Button, Grid } from "@nextui-org/react";
 import { Textarea  } from '@nextui-org/react';
+import { Container, Card, Row, Text } from "@nextui-org/react";
 
 
 const Note: NextPage<any> = (props: any) => {
@@ -127,85 +128,89 @@ const Note: NextPage<any> = (props: any) => {
 
 
   return (
-    <div className={styles.container}>
+    <>
+      <Container>
+        <Grid.Container gap={2}>
+          <main className={styles.main}>
 
-      <main className={styles.main}>
+            <Button onClick={getAllPosts} bordered color="secondary" auto>All Notes</Button>
+          
+            <div className={styles.grid3}>
+              {
+                loadingNotes 
+                ? 
+                  (<h1>Loading.....</h1>) 
+                : 
+                  (<>{
+                      pastPosts.map((post) => {
+                        return (
+                          <Grid sm={4} xs={12} key={post._id + "Grid"}>
+                            <Card key={post._id + "div"}>
+                              <Card.Body>
+                                <ReactMarkdown remarkPlugins={[remarkGfm]} key={post._id} >{post.note}</ReactMarkdown>
+                                <span id={post._id + post.email} key={post._id + post.email}>{post.email} | {post.tags}</span>
+                              </Card.Body>
+                            </Card>
+                          </Grid>
+          
+                        )
+                      })
+                  }</>)
+                
+              }
+            </div>
 
-        <Button onClick={getAllPosts} bordered color="secondary" auto>All Notes</Button>
-      
-        
+            <div>
+              <br />
+              <Grid.Container gap={1}>
+                <Grid sm={10} xs={8}>
+                  <Textarea
+                    name='message' 
+                    value={postStaging}
+                    id='message' 
+                    placeholder="Enter your amazing ideas."
+                    cols={100}
+                    minRows={10}
+                    maxRows={14}
+                    onChange={(e) => {setPostStaging(e.target.value)}}
+                  />
+                </Grid>
+                <Grid sm={2} xs={4}>
+                  <Card>
+                    <h2>Tags</h2>
+                    <div className={styles.grid2}>
+                      <input type='text' name="tags" placeholder='' ref={refTagInput} className={styles.entryInput} onChange={tagStagingOnChangeHandler}></input>
+                      <button onClick={tagSubmitHandler}>+</button>
+                      <hr />
+                      <p>Recently used:</p>
+                    
+                    </div>
+                  </Card>
+                </Grid>
+              </Grid.Container>
 
-        <div className={styles.grid3}>
-          {
-            loadingNotes 
-            ? 
-              (<h1>Loading.....</h1>) 
-            : 
-              (<>{
-                  pastPosts.map((post) => {
-                    return (
-      
-                      <div className={styles.card} key={post._id + "div"}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} key={post._id} >{post.note}</ReactMarkdown>
-                        <span id={post._id + post.email} key={post._id + post.email}>{post.email} | {post.tags}</span>
-                      </div>
-      
-                    )
-                  })
-              }</>)
-            
-          }
-        </div>
+              {
+                tags.map((tag) => {
+                  return (
+                    <button id={tag} key={tag + (Math.random() + 1).toString(36).substring(7)}>{tag}</button>
+                  )
+                })
+              }
+              <hr />
+            </div>
 
-        <div>
-          <br />
-          <div className={styles.grid}>
-            <Textarea
-              name='message' 
-              value={postStaging}
-              id='message' 
-              placeholder="Enter your amazing ideas."
-              cols={100}
-              minRows={10}
-              maxRows={14}
-              onChange={(e) => {setPostStaging(e.target.value)}}
-            />
-          </div>
-          {
-            tags.map((tag) => {
-              return (
-                <button id={tag} key={tag + (Math.random() + 1).toString(36).substring(7)}>{tag}</button>
-              )
-            })
-          }
-          <hr />
-          <div className={styles.grid3}>
-            <div className={styles.card}>
-              <h2>Tags</h2>
-              <div className={styles.grid2}>
-                <input type='text' name="tags" placeholder='' ref={refTagInput} className={styles.entryInput} onChange={tagStagingOnChangeHandler}></input>
-                <button onClick={tagSubmitHandler}>+</button>
-                <hr />
-                <p>Recently used:</p>
-              
+            <div className={styles.profile_options}>
+              <div className={styles.paddingAbove}>  
+                <p>
+                  {props.name}
+                </p>
+                <Link href="/api/auth/logout">Logout</Link>
               </div>
             </div>
-            <button onClick={submitNoteHandler} disabled={freezeSubmit}>Submit Post</button>
-          </div>
-        </div>
-
-        <div className={styles.profile_options}>
-          <div className={styles.paddingAbove}>  
-            <p>
-              {props.name}
-            </p>
-            <Link href="/api/auth/logout">Logout</Link>
-          </div>
-        </div>
-
-
-      </main>
-    </div>
+          </main>
+        </Grid.Container>
+      </Container>
+    </>
   )
 }
 
