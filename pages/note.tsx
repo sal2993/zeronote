@@ -129,7 +129,7 @@ const Note: NextPage<any> = (props: any) => {
 
   return (
     <>
-      <Container>
+      <Container md>
         <Grid.Container gap={2}>
           <main className={styles.main}>
 
