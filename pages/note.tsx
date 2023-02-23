@@ -65,9 +65,9 @@ const Note: NextPage<any> = (props: any) => {
     makeRequest("/api/user-posts?", "", "GET", {"email": props.name, "limited": true}).then((data) => {
       console.log(`data: ~${JSON.stringify(data)}`)
       setPastPosts(data)
-      scrollToBottom()
     })
 
+    scrollToBottom()
 
   }, [])
 
