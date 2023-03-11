@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
   return (
     <div className={styles.container}>
-
+      
       <Head>
         <title id='title'>Zero Note</title>
         <meta id="meta" name="description" content="A no frills, journal app." />
@@ -30,12 +30,12 @@ const Home: NextPage = () => {
               <Note name={user.name}></Note>
           </>
         ) :
-        (
-          <>
-            <h5>A no frills, notes app.</h5>
-            <Link href="/api/auth/login">Login</Link>
-          </>
-        )
+          (
+            <>
+              <h5>A no frills notes, journal app.</h5>
+              <Link href="/api/auth/login">Login</Link>
+            </>
+          )
       }
       </main>
       <footer className={styles.footer}>
