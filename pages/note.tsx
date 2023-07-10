@@ -4,9 +4,6 @@ import styles from '../styles/Home.module.css'
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Button, Grid } from "@nextui-org/react";
-import { Textarea  } from '@nextui-org/react';
-import { Container, Card, Row, Text } from "@nextui-org/react";
 
 
 const Note: NextPage<any> = (props: any) => {
