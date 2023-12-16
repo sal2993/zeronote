@@ -57,10 +57,10 @@ const Note: NextPage<any> = (props: any) => {
 
   useEffect(() => {
 
-    makeRequest("/api/user-posts?", "", "GET", {"email": props.name, "limited": true}).then((data) => {
+    makeRequest("/api/user-post?", "", "GET", {"email": props.name, "limited": true}).then((data) => {
       console.log(`data: ~${JSON.stringify(data)}`)
       setPastPosts(data)
-    })
+    })  
 
     scrollToBottom()
 
@@ -109,7 +109,7 @@ const Note: NextPage<any> = (props: any) => {
 
   }
   
-  const getAllPosts = () => {
+  const loadAllNotesHandler = () => {
     console.log("get all posts...")
     makeRequest("/api/user-posts?", "", "GET", {"email": props.name}).then((data) => {
       console.log(`data: ~${JSON.stringify(data)}`)
@@ -128,7 +128,9 @@ const Note: NextPage<any> = (props: any) => {
   return (
     <div className={styles.container}>
 
+
       <main className={styles.main}>
+        <button onClick={loadAllNotesHandler}>Load All Notes</button>
 
         <div className={styles.grid3}>
           {
