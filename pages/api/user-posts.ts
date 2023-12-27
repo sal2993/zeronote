@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UserNote, UserNoteType } from '../../model/user-note.model'
+import connectDb from '../../lib/connectDb'
 import { Types, connect } from 'mongoose';
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -18,7 +19,7 @@ export default withApiAuthRequired( async function handler(
       // validate data comming in
       if (req.body && req.body['email'] && req.body['note'] && req.body['tags']) {
 
-        await connect(process.env.MONGO_URL ? process.env.MONGO_URL : "")
+        await connectDb()
         var userNote = new UserNote({
           user_uuid: new Types.ObjectId(),
           email: req.body['email'],
@@ -38,10 +39,11 @@ export default withApiAuthRequired( async function handler(
     else if (req.method === "GET") {
 
       if (req.query && req.query['email']) {
-        await connect(process.env.MONGO_URL ? process.env.MONGO_URL : "");
+
+        await connectDb()
+
         let pastUserNotes = await UserNote.find({"email": req.query['email']})
         res.status(200).json(pastUserNotes)
-
       }
     }
     
