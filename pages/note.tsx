@@ -5,6 +5,7 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import PointLocation from '../types/point_location';
+import EapReverseGeocode from '../types/eap_reverse_geocode';
 
 
 const Note: NextPage<any> = (props: any) => {
@@ -125,7 +126,6 @@ const Note: NextPage<any> = (props: any) => {
       setPastPosts((prevState) => {return [...prevState, data]})
       refTagInput.current.value = ""
     })
-
   }
   
   const loadAllNotesHandler = () => {

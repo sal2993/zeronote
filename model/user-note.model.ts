@@ -7,6 +7,7 @@ export interface UserNoteType extends Document {
     date: Date,
     post_id: Types.ObjectId
     location: object,
+    city: string,
     tags: Array<string>,
 }
 
@@ -29,6 +30,7 @@ const UserNoteSchema: Schema = new Schema({
         },
         required: false
     },
+    city: {type: String, required: false},
     tags: {type: Array<string>, required: false}
 });
 

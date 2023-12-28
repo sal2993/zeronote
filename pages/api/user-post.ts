@@ -1,10 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UserNote, UserNoteType } from '../../model/user-note.model'
-import { Types, connect } from 'mongoose';
+import { Types } from 'mongoose';
 import connectDb from '../../lib/connectDb'
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
-const { MongoClient, ServerApiVersion } = require('mongodb');
+import https from 'https';
+import PointLocation from '../../types/point_location';
 
 
 export default withApiAuthRequired( async function handler(
@@ -17,8 +18,8 @@ export default withApiAuthRequired( async function handler(
 
       console.log("req: ", req.body)
       // validate data comming in
+      let location: PointLocation = req.body['location']
       if (req.body && req.body['email'] && req.body['note'] && req.body['tags']) {
-
         await connectDb()
         var userNote = new UserNote({
           user_uuid: new Types.ObjectId(),
@@ -26,6 +27,7 @@ export default withApiAuthRequired( async function handler(
           note: req.body['note'],
           date: Date.now(),
           post_id: new Types.ObjectId(),
+          location: convertToGeoJson(location),
           tags: req.body['tags'],
         })
         await userNote.save();
@@ -62,3 +64,10 @@ export default withApiAuthRequired( async function handler(
     res.status(400).send(error)
   }
 })
+
+function convertToGeoJson(location: PointLocation) {
+  return {
+    "type": "Point",
+    "coordinates": [location.longitude, location.latitude]
+  }
+}
