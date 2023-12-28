@@ -13,30 +13,7 @@ export default withApiAuthRequired( async function handler(
 ) {
   try {
 
-    if (req.method == "POST") {
-
-      console.log("req: ", req.body)
-      // validate data comming in
-      if (req.body && req.body['email'] && req.body['note'] && req.body['tags']) {
-
-        await connectDb()
-        var userNote = new UserNote({
-          user_uuid: new Types.ObjectId(),
-          email: req.body['email'],
-          note: req.body['note'],
-          date: Date.now(),
-          post_id: new Types.ObjectId(),
-          tags: req.body['tags'],
-        })
-        await userNote.save();
-        res.status(200).json(userNote)
-        
-      }
-      else {
-        res.status(400)
-      }
-    }
-    else if (req.method === "GET") {
+    if (req.method === "GET") {
 
       if (req.query && req.query['email']) {
 
@@ -45,6 +22,9 @@ export default withApiAuthRequired( async function handler(
         let pastUserNotes = await UserNote.find({"email": req.query['email']})
         res.status(200).json(pastUserNotes)
       }
+    }
+    else {
+      res.status(501)
     }
     
   } catch (error: any) {

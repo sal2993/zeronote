@@ -4,6 +4,7 @@ type UserPost = {
   message: string | Array<string>,
   date: Date,
   tags: Array<string>,
+  location: object,
   post_id: string
 }
 

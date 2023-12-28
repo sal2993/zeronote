@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.css'
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import PointLocation from '../types/point_location';
 
 
 const Note: NextPage<any> = (props: any) => {
@@ -13,6 +14,7 @@ const Note: NextPage<any> = (props: any) => {
 
   const [pastPosts, setPastPosts] = useState([] as Array<any>)
   const [tags, setTags] = useState([] as Array<string>);
+  const [location, setLocation] = useState({} as PointLocation | undefined);
   const [tagStaging, setTagStaging] = useState([]);
   const [postStaging, setPostStaging] = useState('');
   const refTagInput = useRef<any>("n")
@@ -62,14 +64,30 @@ const Note: NextPage<any> = (props: any) => {
       setPastPosts(data)
     })  
 
-    scrollToBottom()
-
   }, [])
 
-
-  const scrollToBottom = () => {
-    refTagInput.current?.scrollIntoView({behavior: "smooth"})
-  }
+  useEffect(() => {
+    if('geolocation' in navigator) {
+      // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+          const { latitude, longitude } = coords;
+          console.log(`lat: ${latitude}. lng: ${longitude}`)
+          setLocation({ latitude, longitude });
+      }, (error) => {
+        if (error.code == error.PERMISSION_DENIED) {
+          console.log("user denied permissions.")
+          setLocation(undefined)
+        }
+        else {
+          console.log("some error getting location.")
+          setLocation(undefined)
+        }
+      });
+    }
+    else {
+      setLocation(undefined)
+    }
+}, []);
 
   const tagSubmitHandler = () => {
     
@@ -82,6 +100,7 @@ const Note: NextPage<any> = (props: any) => {
 
     console.log("submitting the post tags: ", tags)
     console.log("submitting the post payload: ", postStaging)
+    console.log(`submitting the location ${location}`)
     console.log("submitting the user: ", props.name)
 
     // makeRequest("/api/user-posts", "/hello-locked", "GET", "").then ((data) => {console.log("resultzzzzz ~ ", data)})
@@ -89,6 +108,7 @@ const Note: NextPage<any> = (props: any) => {
     const note_post = {
       note: postStaging,
       tags: tags,
+      location: location,
       email: props.name // todo: change to props.name after this mf plane
     }
 
@@ -96,7 +116,7 @@ const Note: NextPage<any> = (props: any) => {
     console.log("serialize body: ", JSON.stringify(note_post))
 
 
-    makeRequest( "/api/user-posts", "", "POST", note_post).then((data) => {
+    makeRequest( "/api/user-post", "", "POST", note_post).then((data) => {
       console.log(data)
       // todo: add the data to the react state.
       setPostStaging('')
@@ -104,7 +124,6 @@ const Note: NextPage<any> = (props: any) => {
       setTags([])
       setPastPosts((prevState) => {return [...prevState, data]})
       refTagInput.current.value = ""
-
     })
 
   }
