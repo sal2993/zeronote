@@ -5,6 +5,7 @@ type UserPost = {
   date: Date,
   tags: Array<string>,
   location: object,
+  city_country: string,
   post_id: string
 }
 

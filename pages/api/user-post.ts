@@ -6,6 +6,8 @@ import connectDb from '../../lib/connectDb'
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import https from 'https';
 import PointLocation from '../../types/point_location';
+import axios from 'axios';
+import EapReverseGeocode from '../../types/eap_reverse_geocode';
 
 
 export default withApiAuthRequired( async function handler(
@@ -19,6 +21,10 @@ export default withApiAuthRequired( async function handler(
       console.log("req: ", req.body)
       // validate data comming in
       let location: PointLocation = req.body['location']
+      let cityCountry: any // Not super clear why I can't add string value here
+      if (location) {
+        cityCountry = await getCityCountry(location)
+      }
       if (req.body && req.body['email'] && req.body['note'] && req.body['tags']) {
         await connectDb()
         var userNote = new UserNote({
@@ -28,6 +34,7 @@ export default withApiAuthRequired( async function handler(
           date: Date.now(),
           post_id: new Types.ObjectId(),
           location: convertToGeoJson(location),
+          city_country: cityCountry,
           tags: req.body['tags'],
         })
         await userNote.save();
@@ -63,6 +70,7 @@ export default withApiAuthRequired( async function handler(
     console.log("error: ", error)
     res.status(400).send(error)
   }
+
 })
 
 function convertToGeoJson(location: PointLocation) {
@@ -70,4 +78,24 @@ function convertToGeoJson(location: PointLocation) {
     "type": "Point",
     "coordinates": [location.longitude, location.latitude]
   }
+}
+
+async function getCityCountry(location: PointLocation) {
+  let cityCountry: string
+  try {
+    const response = await axios.get('https://eap.corelogic.com/reverse-geocode', {
+      params: {
+        latitude: location.latitude,
+        longitude: location.longitude
+      }
+    })
+    let geocodeResponse: EapReverseGeocode = response.data;
+    cityCountry = `${geocodeResponse.geocode[0].city}, ${geocodeResponse.geocode[0].country}`;
+    console.log("city country resp: ", cityCountry);
+  }
+  catch (error) {
+    cityCountry = "";
+    console.log("something with geocoding didn't work..", error);
+  }
+  return cityCountry
 }

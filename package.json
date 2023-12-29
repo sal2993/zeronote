@@ -11,6 +11,7 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.0",
     "@rebass/forms": "^4.0.6",
+    "axios": "^0.21.1",
     "mongodb": "^4.7.0",
     "mongoose": "^6.4.6",
     "next": "12.1.6",
