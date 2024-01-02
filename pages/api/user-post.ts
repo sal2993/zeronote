@@ -4,7 +4,6 @@ import { UserNote, UserNoteType } from '../../model/user-note.model'
 import { Types } from 'mongoose';
 import connectDb from '../../lib/connectDb'
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
-import https from 'https';
 import PointLocation from '../../types/point_location';
 import axios from 'axios';
 import EapReverseGeocode from '../../types/eap_reverse_geocode';
@@ -15,15 +14,19 @@ export default withApiAuthRequired( async function handler(
   res: NextApiResponse<Array<UserNoteType> | UserNoteType>
 ) {
   try {
+    console.log(`request: ${req}`)
 
     if (req.method == "POST") {
 
       console.log("req: ", req.body)
-      // validate data comming in
-      let location: PointLocation = req.body['location']
+
+      // let region: string = req.geo?.country ?? ""
       let cityCountry: any // Not super clear why I can't add string value here
+      let location: PointLocation = req.body['location']
+      // todo: validate data comming in
       if (location) {
-        cityCountry = await getCityCountry(location)
+        
+        cityCountry = await getCityCountry(location, "")
       }
       if (req.body && req.body['email'] && req.body['note'] && req.body['tags']) {
         await connectDb()
@@ -80,7 +83,7 @@ function convertToGeoJson(location: PointLocation) {
   }
 }
 
-async function getCityCountry(location: PointLocation) {
+async function getCityCountry(location: PointLocation, region: string) {
   let cityCountry: string
   try {
     const response = await axios.get('https://eap.corelogic.com/reverse-geocode', {

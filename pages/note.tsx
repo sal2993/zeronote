@@ -5,7 +5,6 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import PointLocation from '../types/point_location';
-import EapReverseGeocode from '../types/eap_reverse_geocode';
 
 
 const Note: NextPage<any> = (props: any) => {
@@ -97,35 +96,41 @@ const Note: NextPage<any> = (props: any) => {
     refTagInput.current.value = ""
   }
 
-  const submitNoteHandler = async () => {
+  const submitNoteHandler = async (e: React.ChangeEvent<HTMLButtonElement> | any) => {
 
+    e.target.disabled = true
     console.log("submitting the post tags: ", tags)
     console.log("submitting the post payload: ", postStaging)
     console.log(`submitting the location ${location}`)
     console.log("submitting the user: ", props.name)
+    if (postStaging != "") {
 
-    // makeRequest("/api/user-posts", "/hello-locked", "GET", "").then ((data) => {console.log("resultzzzzz ~ ", data)})
+      const note_post = {
+        note: postStaging,
+        tags: tags,
+        location: location,
+        email: props.name // todo: change to props.name after this mf plane
+      }
 
-    const note_post = {
-      note: postStaging,
-      tags: tags,
-      location: location,
-      email: props.name // todo: change to props.name after this mf plane
+      console.log("body of node: ", note_post)
+      console.log("serialize body: ", JSON.stringify(note_post))
+
+
+      makeRequest( "/api/user-post", "", "POST", note_post).then((data) => {
+        console.log(data)
+        e.target.disabled = false
+        // todo: add the data to the react state.
+        setPostStaging('')
+        setTagStaging([])
+        setTags([])
+        setPastPosts((prevState) => {return [...prevState, data]})
+        refTagInput.current.value = ""
+      })
+    } else {
+      e.target.disabled = false
     }
-
-    console.log("body of node: ", note_post)
-    console.log("serialize body: ", JSON.stringify(note_post))
-
-
-    makeRequest( "/api/user-post", "", "POST", note_post).then((data) => {
-      console.log(data)
-      // todo: add the data to the react state.
-      setPostStaging('')
-      setTagStaging([])
-      setTags([])
-      setPastPosts((prevState) => {return [...prevState, data]})
-      refTagInput.current.value = ""
-    })
+    
+    
   }
   
   const loadAllNotesHandler = () => {
@@ -155,11 +160,14 @@ const Note: NextPage<any> = (props: any) => {
           {
             pastPosts.map((post) => {
               return (
-
-                <div className={styles.card} key={post._id + "div"}>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]} key={post._id} >{post.note}</ReactMarkdown>
-                  <span id={post._id + post.email} key={post._id + post.email}>{post.email} | {post.city_country} | {post.tags}</span>
-                </div>
+                (post) 
+                ?
+                  <div className={styles.card} key={post._id + "div"}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} key={post._id} >{post.note}</ReactMarkdown>
+                    <span id={post._id + post.email} key={post._id + post.email}>{post.email} | {post.city_country} | {post.tags}</span>
+                  </div>
+                :
+                  <p>No posts here... yet..</p>
 
               )
             })
