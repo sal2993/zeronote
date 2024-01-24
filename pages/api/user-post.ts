@@ -14,13 +14,11 @@ export default withApiAuthRequired( async function handler(
   res: NextApiResponse<Array<UserNoteType> | UserNoteType>
 ) {
   try {
-    console.log(`request: ${req}`)
 
     if (req.method == "POST") {
 
       console.log("req: ", req.body)
 
-      // let region: string = req.geo?.country ?? ""
       let cityCountry: any // Not super clear why I can't add string value here
       let location: PointLocation = req.body['location']
       // todo: validate data comming in

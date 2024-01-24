@@ -23,26 +23,30 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main} id='main'>
-      <h1>Zero Note</h1>
-      {
-        user ? (
-          <> 
-              <Note name={user.name}></Note>
-          </>
-        ) :
-          (
-            <>
-              <h5>A no frills notes, journal app.</h5>
-              <Link href="/api/auth/login">Login</Link>
+        
+        {
+          user ? (
+            <> 
+                <Note name={user.name}></Note>
             </>
-          )
-      }
+          ) :
+            (
+              <>
+                <h1 className={styles.spacing}>Zero Note</h1>
+                <h5>A no frills notes, journal app.</h5>
+                <div className={styles.spacingTopBottom}>
+                  <button className={styles.b1}>
+                    <Link href="/api/auth/login">Login</Link>
+                  </button>
+                  <button className={styles.b1} onClick={() => {console.log("Will show you my email alt email")}}>
+                    Signup
+                  </button>
+                  
+                </div>
+              </>
+            )
+        }
       </main>
-      <footer className={styles.footer}>
-        <h4>
-          Zero Note
-        </h4>
-      </footer>
     </div>
   )
 }

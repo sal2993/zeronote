@@ -2,16 +2,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UserNote, UserNoteType } from '../../model/user-note.model'
 import connectDb from '../../lib/connectDb'
-import { Types, connect } from 'mongoose';
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
-const { MongoClient, ServerApiVersion } = require('mongodb');
-
+import { getSession } from '@auth0/nextjs-auth0';
 
 export default withApiAuthRequired( async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Array<UserNoteType> | UserNoteType>
 ) {
   try {
+    const user = await getSession(req, res); // todo, use this user to make db requests
+    console.log(`user: ${JSON.stringify(user)}`)
 
     if (req.method === "GET") {
 

@@ -64,7 +64,7 @@ const Note: NextPage<any> = (props: any) => {
       setPastPosts(data)
     })  
 
-  }, [])
+  })
 
   useEffect(() => {
     if('geolocation' in navigator) {
@@ -151,10 +151,12 @@ const Note: NextPage<any> = (props: any) => {
 
   return (
     <div className={styles.container}>
+      <h4 className={styles.noteHeader}>Zero Note</h4>
+      <span>{props.name}</span>
 
 
       <main className={styles.main}>
-        <button onClick={loadAllNotesHandler}>Load All Notes</button>
+        <button onClick={loadAllNotesHandler} className={styles.b1}>Load All Notes</button>
 
         <div className={styles.grid3}>
           {
