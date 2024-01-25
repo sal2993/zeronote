@@ -18,7 +18,7 @@ const Home: NextPage = () => {
       
       <Head>
         <title id='title'>Zero Note</title>
-        <meta id="meta" name="description" content="A no frills, journal app." />
+        <meta id="meta" name="description" content='A "no frills" notes app.' />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -33,7 +33,7 @@ const Home: NextPage = () => {
             (
               <>
                 <h1 className={styles.spacing}>Zero Note</h1>
-                <h5>A no frills notes, journal app.</h5>
+                <h5>A "no frills" notes app.</h5>
                 <div className={styles.spacingTopBottom}>
                   <button className={styles.b1}>
                     <Link href="/api/auth/login">Login</Link>
