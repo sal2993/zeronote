@@ -90,16 +90,22 @@ const Note: NextPage<any> = (props: any) => {
   const submitNoteHandler = async (e: React.ChangeEvent<HTMLButtonElement> | any) => {
 
     e.target.disabled = true
+    let postTags = extractTags(postStaging)
+    let postStagingFormatted = postStaging + "_"
+
     console.log("submitting the post payload: ", postStaging)
     console.log(`submitting the location ${location}`)
     console.log("submitting the user: ", props.name)
 
-    let postTags = extractTags(postStaging)
-    console.log("TAG! s: ", postTags)
+    // I want to remove #tags from note. Seems like clutter to have it.
+    postTags?.map( i => {
+      postStagingFormatted = postStagingFormatted.replace(i, "")
+    })
+
     if (postStaging != "") {
 
       const note_post = {
-        note: postStaging,
+        note: postStagingFormatted,
         tags: postTags,
         location: location,
         email: props.name // todo: change to props.name after this mf plane
@@ -168,6 +174,7 @@ const Note: NextPage<any> = (props: any) => {
               cols={100}
               onChange={(e) => {setPostStaging(e.target.value)}}
             />
+            <button onClick={submitNoteHandler}>Submit Post</button>
           </div>
         </div>
 
