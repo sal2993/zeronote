@@ -64,7 +64,7 @@ const Note: NextPage<any> = (props: any) => {
       setPastPosts(data)
     })  
 
-  })
+  }, []);
 
   useEffect(() => {
     if('geolocation' in navigator) {
