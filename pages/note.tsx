@@ -5,19 +5,16 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import PointLocation from '../types/point_location';
+import extractTags from '../utils/utils';
 
 
 const Note: NextPage<any> = (props: any) => {
 
-  let tagDraft: string;
   let postDraft: string;
 
   const [pastPosts, setPastPosts] = useState([] as Array<any>)
-  const [tags, setTags] = useState([] as Array<string>);
   const [location, setLocation] = useState({} as PointLocation | undefined);
-  const [tagStaging, setTagStaging] = useState([]);
   const [postStaging, setPostStaging] = useState('');
-  const refTagInput = useRef<any>("n")
 
 
   let makeRequest = async (url: string, endpoint: string, requestMethod: string, body: Record<string, string | string[]> | any) => {
@@ -89,25 +86,21 @@ const Note: NextPage<any> = (props: any) => {
     }
 }, []);
 
-  const tagSubmitHandler = () => {
-    
-    console.log("tagSubmitHandler")
-    setTags(tags => [...tags, tagDraft])
-    refTagInput.current.value = ""
-  }
 
   const submitNoteHandler = async (e: React.ChangeEvent<HTMLButtonElement> | any) => {
 
     e.target.disabled = true
-    console.log("submitting the post tags: ", tags)
     console.log("submitting the post payload: ", postStaging)
     console.log(`submitting the location ${location}`)
     console.log("submitting the user: ", props.name)
+
+    let postTags = extractTags(postStaging)
+    console.log("TAG! s: ", postTags)
     if (postStaging != "") {
 
       const note_post = {
         note: postStaging,
-        tags: tags,
+        tags: postTags,
         location: location,
         email: props.name // todo: change to props.name after this mf plane
       }
@@ -121,10 +114,7 @@ const Note: NextPage<any> = (props: any) => {
         e.target.disabled = false
         // todo: add the data to the react state.
         setPostStaging('')
-        setTagStaging([])
-        setTags([])
         setPastPosts((prevState) => {return [...prevState, data]})
-        refTagInput.current.value = ""
       })
     } else {
       e.target.disabled = false
@@ -140,14 +130,6 @@ const Note: NextPage<any> = (props: any) => {
       setPastPosts(data)
     })
   }
-
-  const tagStagingOnChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("tag handler triggered.")
-    tagDraft = (e.target as HTMLInputElement).value
-    console.log('tagdraft: ', tagDraft)
-
-  }
-
 
   return (
     <div className={styles.container}>
@@ -179,28 +161,13 @@ const Note: NextPage<any> = (props: any) => {
         <div>
           <br />
           <div className={styles.grid}>
-            <textarea name='message' value={postStaging} id='message' rows={10} cols={100} onChange={(e) => {setPostStaging(e.target.value)}}></textarea>
-          </div>
-          {
-            tags.map((tag) => {
-              return (
-                <button id={tag} key={tag + (Math.random() + 1).toString(36).substring(7)}>{tag}</button>
-              )
-            })
-          }
-          <hr />
-          <div className={styles.grid3}>
-            <div className={styles.card}>
-              <h2>Tags</h2>
-              <div className={styles.grid2}>
-                <input type='text' name="tags" placeholder='' ref={refTagInput} className={styles.entryInput} onChange={tagStagingOnChangeHandler}></input>
-                <button onClick={tagSubmitHandler}>+</button>
-                <hr />
-                <p>Recently used:</p>
-              
-              </div>
-            </div>
-            <button onClick={submitNoteHandler}>Submit Post</button>
+            <textarea name='message'
+              value={postStaging}
+              id='message'
+              rows={10}
+              cols={100}
+              onChange={(e) => {setPostStaging(e.target.value)}}
+            />
           </div>
         </div>
 
