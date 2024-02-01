@@ -91,7 +91,7 @@ const Note: NextPage<any> = (props: any) => {
 
     e.target.disabled = true
     let postTags = extractTags(postStaging)
-    let postStagingFormatted = postStaging + "_"
+    let postStagingFormatted = postStaging + ""
 
     console.log("submitting the post payload: ", postStaging)
     console.log(`submitting the location ${location}`)
