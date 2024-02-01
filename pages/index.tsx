@@ -5,9 +5,13 @@ import styles from '../styles/Home.module.css'
 import { useUser } from '@auth0/nextjs-auth0';
 import Link from 'next/link';
 import Note from './note'
+import extractTags from '../utils/utils'
 
 
 const Home: NextPage = () => {
+
+  const body = "this is an example #example"
+  console.log(extractTags(body))
   const { user, error, isLoading } = useUser();
 
   if (isLoading) return <div>Loading...</div>;
@@ -33,7 +37,7 @@ const Home: NextPage = () => {
             (
               <>
                 <h1 className={styles.spacing}>Zero Note</h1>
-                <h5>A "no frills" notes app.</h5>
+                <h5>A &#34;no frills&#34; notes app.</h5>
                 <div className={styles.spacingTopBottom}>
                   <button className={styles.b1}>
                     <Link href="/api/auth/login">Login</Link>
