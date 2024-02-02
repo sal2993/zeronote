@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { useUser } from '@auth0/nextjs-auth0';
 import Link from 'next/link';
@@ -10,8 +10,14 @@ import Note from './note'
 const Home: NextPage = () => {
   const { user, error, isLoading } = useUser();
 
+  const [signup, setSignup] = useState(false)
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
+
+  const signupHandler = () => {
+    setSignup(true)
+  }
 
   return (
     <div className={styles.container}>
@@ -34,11 +40,23 @@ const Home: NextPage = () => {
               <>
                 <h1 className={styles.spacing}>Zero Note</h1>
                 <h5>A &#34;no frills&#34; notes app.</h5>
+                {
+                  !signup ? (
+                    <></>
+                  ) :
+                  (
+                    <div className={styles.card} style={{backgroundColor: "#56636f"}}>
+                      <p>Want to sign up? ZN is still in beta so send us your email and I&#39;ll create an account for ya!</p>
+                      <input type='email' />
+                      <button className={styles.b1}>submit</button>
+                    </div>
+                  )
+                }
                 <div className={styles.spacingTopBottom}>
                   <button className={styles.b1}>
                     <Link href="/api/auth/login">Login</Link>
                   </button>
-                  <button className={styles.b1} onClick={() => {console.log("Will show you my email alt email")}}>
+                  <button className={styles.b1} onClick={signupHandler}>
                     Signup
                   </button>
                   
