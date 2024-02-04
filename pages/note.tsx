@@ -6,53 +6,14 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import PointLocation from '../types/point_location';
 import extractTags from '../utils/utils';
+import makeRequest from '../lib/httpRequests';
 
 
 const Note: NextPage<any> = (props: any) => {
 
-  let postDraft: string;
-
   const [pastPosts, setPastPosts] = useState([] as Array<any>)
   const [location, setLocation] = useState({} as PointLocation | undefined);
   const [postStaging, setPostStaging] = useState('');
-
-
-  let makeRequest = async (url: string, endpoint: string, requestMethod: string, body: Record<string, string | string[]> | any) => {
-
-    let requestConfig: RequestInit
-    let reqUrl: string
-
-    if (requestMethod != 'GET') {
-      reqUrl = url + endpoint
-      requestConfig = {
-        method: requestMethod,
-        cache: 'no-cache',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-    } else {
-
-      const searchParams = new URLSearchParams(body as Record<string, string>)
-      console.log(`query params = ${searchParams}`)
-      reqUrl = url + endpoint + searchParams.toString()
-      requestConfig = {
-        method: requestMethod,
-        cache: 'no-cache',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      }
-    }
-   
-    console.log(`url: ${url} endpoint: ${endpoint} requestMethod: ${requestMethod} body: ${body}`)
-    console.log(`requestConfig: ${JSON.stringify(requestConfig)} reqUrl: ${reqUrl}`)
-
-    const res = await fetch( reqUrl, requestConfig )
-    const res_data = await res.json();
-    return res_data
-  }
 
   useEffect(() => {
 

@@ -5,18 +5,28 @@ import styles from '../styles/Home.module.css'
 import { useUser } from '@auth0/nextjs-auth0';
 import Link from 'next/link';
 import Note from './note'
+import makeRequest from '../lib/httpRequests';
 
 
 const Home: NextPage = () => {
   const { user, error, isLoading } = useUser();
 
   const [signup, setSignup] = useState(false)
+  const [email, setEmail] = useState('')
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
 
   const signupHandler = () => {
     setSignup(true)
+  }
+
+  const sendEmail = () => {
+    console.log("sending email...")
+
+    makeRequest("/api/send-email?", "", "GET", {"email": email}).then((data) => {
+      console.log("sent.. ~")
+    })
   }
 
   return (
@@ -47,8 +57,8 @@ const Home: NextPage = () => {
                   (
                     <div className={styles.card} style={{backgroundColor: "#56636f"}}>
                       <p>Want to sign up? ZN is still in beta so send us your email and I&#39;ll create an account for ya!</p>
-                      <input type='email' />
-                      <button className={styles.b1}>submit</button>
+                      <input type='email' value={email} onChange={(e) => setEmail(e.target.value)}/>
+                      <button onClick={sendEmail} className={styles.b1}>submit</button>
                     </div>
                   )
                 }
