@@ -27,7 +27,10 @@ export default withApiAuthRequired( async function handler(
         cityCountry = '' // await getCityCountry(location, "")
       }
       if (req.body && req.body['email'] && req.body['note'] && req.body['tags']) {
+        console.log("about to connect to db..")
         await connectDb()
+        
+        console.log("connected to db!")
         var userNote = new UserNote({
           user_uuid: new Types.ObjectId(),
           email: req.body['email'],
@@ -38,7 +41,9 @@ export default withApiAuthRequired( async function handler(
           city_country: cityCountry,
           tags: req.body['tags'],
         })
+        console.log("saving to db..")
         await userNote.save();
+        console.log("savied!")
         res.status(200).json(userNote)
         
       }
