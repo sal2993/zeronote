@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Resend } from 'resend';
+import { isEmail } from '../../utils/utils';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY : ""
 const SCAMARA_EMAIL = process.env.SCAMARA_EMAIL ? process.env.SCAMARA_EMAIL : ""
@@ -17,28 +18,28 @@ export default async function handler(
       let user_email = req.query['email']
 
       if (req.query && user_email) {
+        console.log("this is converting to string: ", user_email.toString())
+        if (isEmail(user_email.toString())) {
 
-        console.log("about to send email..")
-        // console.log(RESEND_API_KEY)
-        // resend.emails.send({
-        //   from: SCAMARA_EMAIL,
-        //   to: user_email,
-        //   subject: `Zeronote add User`,
-        //   html: `<h1>ZeroNote beta: add user</h1><p> User email: <strong>${user_email}</strong>!</p>`
-        // }).then(() => {console.log("sent email!!")}).catch((e) => {console.error(e, "failed to sennd email...")});
+          console.log("about to send email..")
         
-        const { data, error } = await resend.emails.send({
-          from: SCAMARA_EMAIL,
-          to: [SCAMARA_EMAIL],
-          subject: 'Hello world',
-          text: `test test... ${user_email}`
-        });
-      
-        if (error) {
-          return res.status(400).json(error);
+          const { data, error } = await resend.emails.send({
+            from: SCAMARA_EMAIL,
+            to: [SCAMARA_EMAIL],
+            subject: 'Zeronote: Add User',
+            text: `Add this user --> ${user_email}`
+          });
+        
+          if (error) {
+            return res.status(400).json(error);
+          }
+        
+          res.status(200).json(data);
         }
-      
-        res.status(200).json(data);
+        else {
+          console.log("incorrect email format")
+          res.status(400).send({})
+        }
       }
     }
     else {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import PointLocation from '../types/point_location';
-import extractTags from '../utils/utils';
+import { extractTags } from '../utils/utils';
 import makeRequest from '../lib/httpRequests';
 
 

@@ -1,6 +1,6 @@
 
 
-function extractTags(body: string): Array<string> | null {
+export function extractTags(body: string): Array<string> | null {
 
   if (body != undefined || body != '') {
     const regex = /#[a-z0-9_]+/g
@@ -14,4 +14,12 @@ function extractTags(body: string): Array<string> | null {
   
 }
 
-export default extractTags;
+export function isEmail(email: string): boolean {
+  const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+  let match_results = email.match(regex)
+  if (!match_results) {
+    return false
+  }
+  return true
+}
+
