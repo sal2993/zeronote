@@ -24,8 +24,8 @@ export default async function handler(
           to: user_email,
           subject: `Zeronote add User`,
           html: `<h1>ZeroNote beta: add user</h1><p> User email: <strong>${user_email}</strong>!</p>`
-        });
-        console.log("sent email!")
+        }).then(() => {console.log("sent email!")}).catch((e) => {console.error(e, "failed to sennd email...")});
+        
         res.status(200).json({})
       }
     }
