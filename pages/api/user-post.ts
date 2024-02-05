@@ -91,6 +91,7 @@ async function getCityCountry(location: PointLocation, region: string) {
       }
     })
     let geocodeResponse: EapReverseGeocode = response.data;
+    console.log(JSON.stringify(geocodeResponse))
     if (geocodeResponse && geocodeResponse.geocode && geocodeResponse.geocode.length > 0) {
 
       cityCountry = `${geocodeResponse.geocode[0].city}, ${geocodeResponse.geocode[0].country}`;
