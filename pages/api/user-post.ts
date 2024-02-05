@@ -91,8 +91,14 @@ async function getCityCountry(location: PointLocation, region: string) {
       }
     })
     let geocodeResponse: EapReverseGeocode = response.data;
-    cityCountry = `${geocodeResponse.geocode[0].city}, ${geocodeResponse.geocode[0].country}`;
-    console.log("city country resp: ", cityCountry);
+    if (geocodeResponse && geocodeResponse.geocode && geocodeResponse.geocode.length > 0) {
+
+      cityCountry = `${geocodeResponse.geocode[0].city}, ${geocodeResponse.geocode[0].country}`;
+      console.log("city country resp: ", cityCountry);
+    }
+    else {
+      cityCountry = ''
+    }
   }
   catch (error) {
     cityCountry = "";
