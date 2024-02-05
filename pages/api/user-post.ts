@@ -23,8 +23,8 @@ export default withApiAuthRequired( async function handler(
       let location: PointLocation = req.body['location']
       // todo: validate data comming in
       if (location) {
-        
-        cityCountry = await getCityCountry(location, "")
+        // commented line below because was getting some errors from corelogic.com. Bad Request
+        cityCountry = '' // await getCityCountry(location, "")
       }
       if (req.body && req.body['email'] && req.body['note'] && req.body['tags']) {
         await connectDb()
