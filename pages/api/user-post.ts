@@ -14,8 +14,10 @@ export default withApiAuthRequired( async function handler(
   res: NextApiResponse<Array<UserNoteType> | UserNoteType>
 ) {
   try {
+    console.log(" /api/user-post called")
 
     if (req.method == "POST") {
+      console.log ("    POST!")
 
       console.log("req: ", req.body)
 
@@ -53,7 +55,7 @@ export default withApiAuthRequired( async function handler(
     }
     // Returns 2 latest posts (not 1)
     else if (req.method === "GET") {
-      console.log("Getting into the GET..")
+      console.log ("    GET!")
 
       if (req.query && req.query['email']) {
         console.log("  passed validation...") // leaving these in bc want to migrate to proper logger.
