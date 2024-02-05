@@ -19,15 +19,16 @@ export default async function handler(
       if (req.query && user_email) {
 
         console.log("about to send email..")
+        console.log(RESEND_API_KEY)
         resend.emails.send({
           from: SCAMARA_EMAIL,
           to: user_email,
           subject: `Zeronote add User`,
           html: `<h1>ZeroNote beta: add user</h1><p> User email: <strong>${user_email}</strong>!</p>`
-        }).then(() => {console.log("sent email!")}).catch((e) => {console.error(e, "failed to sennd email...")});
+        }).then(() => {console.log("sent email!!")}).catch((e) => {console.error(e, "failed to sennd email...")});
         
         res.status(200).json({})
-      }
+      }``
     }
     else {
       res.status(501)
