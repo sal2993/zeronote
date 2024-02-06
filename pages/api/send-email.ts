@@ -34,20 +34,20 @@ export default async function handler(
             return res.status(400).json(error);
           }
         
-          res.status(200).json(data);
+          res.status(200).json({"emailSent": true, "data": data});
         }
         else {
           console.log("incorrect email format")
-          res.status(400).send({})
+          res.status(400).json({"emailSent": false, "data": "invalid email format"});
         }
       }
     }
     else {
-      res.status(501)
+      res.status(501).json({"emailSent": false, "data": "invalid email Method request"});
     }
     
   } catch (error: any) {
     console.log("error: ", error)
-    res.status(400).send(error)
+    res.status(400).json({"emailSent": false, "data": error});
   }
 }
