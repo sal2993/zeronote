@@ -43,7 +43,8 @@ const Home: NextPage = () => {
   - One cannot yet view notes by tag (filter)
 
   If you would still like to try Zeronote in BETA, 
-  send your email and I&#39;ll create you an account with instructions.`
+  send your email and I&#39;ll create you an account with instructions.
+  OR you can log in with GMAIL (google-oauth2).`
 
   return (
     <div className={styles.container}>
