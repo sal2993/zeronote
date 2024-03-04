@@ -141,6 +141,14 @@
   max-width: 1200px;
 }
 
+.noteBody {
+  opacity: 10%;
+}
+
+.noteBody:hover {
+  opacity: 100%;
+}
+
 .card {
   margin: 1rem;
   padding: 1.5rem;

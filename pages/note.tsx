@@ -114,7 +114,9 @@ const Note: NextPage<any> = (props: any) => {
                 (post) 
                 ?
                   <div className={styles.card} key={post._id + "div"}>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} key={post._id} >{post.note}</ReactMarkdown>
+                    <div className={styles.noteBody}>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} key={post._id} >{post.note}</ReactMarkdown>
+                    </div>
                     <span id={post._id + post.email} key={post._id + post.email}>{post.email} | {post.city_country} | {post.tags}</span>
                   </div>
                 :
