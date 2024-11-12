@@ -147,6 +147,7 @@ const Note: NextPage<any> = (props: any) => {
             {props.name}
           </p>
             <Link href="/api/auth/logout">Logout</Link>
+            <p>Inspired by and in memory of John Cohen 🕊️</p>
           </div>
         </div>
 
